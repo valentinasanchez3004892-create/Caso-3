@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Monitoreo de Lluvia CVC</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-gota" viewBox="0 0 24 24"><path d="M12 2.5C12 2.5 5 10 5 15a7 7 0 0 0 14 0c0-5-7-12.5-7-12.5z" fill="currentColor"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 0-7 7c0 5 7 13 7 13s7-8 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z" fill="currentColor"/></symbol>
+  <symbol id="i-reloj" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 7v5l3 2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+  <symbol id="i-barras" viewBox="0 0 24 24"><path d="M4 20V10h4v10zm6 0V4h4v16zm6 0v-7h4v7z" fill="currentColor"/></symbol>
+  <symbol id="i-lista" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h10" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" fill="none"/></symbol>
+  <symbol id="i-camara" viewBox="0 0 24 24"><path d="M9 4l-1.5 2H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-3.5L15 4zm3 5a4.5 4.5 0 1 1 0 9 4.5 4.5 0 0 1 0-9z" fill="currentColor"/></symbol>
+  <symbol id="i-calc" viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="2.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 8h8M8 13h2m4 0h2M8 17h2m4 0h2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+</svg>
+
+<!-- VISTA 1: ACCESO -->
+<main id="vista-login" class="login">
+  <div class="lluvia" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+  <div class="login-marco">
+    <aside class="login-marca">
+      <svg class="logo"><use href="#i-gota"/></svg>
+      <h1>Monitoreo de lluvia</h1>
+      <p>Registra cuánta lluvia cae en cada zona de Cali y compárala con el estándar de 14 mm.</p>
+      <ul>
+        <li>Duración y precipitación por evento</li>
+        <li>Comparación con el estándar de Cali</li>
+        <li>Gráfica e historial de la sesión</li>
+      </ul>
+    </aside>
+    <form id="form-login" class="login-form" autocomplete="off">
+      <h2>Bienvenido</h2>
+      <p class="sub">Ingresa con tu usuario de la CVC.</p>
+      <label for="usuario">Usuario</label>
+      <input id="usuario" type="text" required>
+      <label for="clave">Contraseña</label>
+      <input id="clave" type="password" required>
+      <p id="error-login" class="aviso error oculto" role="alert">Usuario o contraseña incorrectos. Vuelve a intentarlo.</p>
+      <button type="submit" class="primario grande">Iniciar sesión</button>
+    </form>
+  </div>
+</main>
+
+<!-- VISTA 2: PANEL PRINCIPAL -->
+<div id="vista-panel" class="oculto">
+  <header class="barra">
+    <div class="barra-marca"><svg><use href="#i-gota"/></svg><strong>Monitoreo de lluvia</strong><span>CVC · Cali</span></div>
+    <button id="btn-salir" class="salir" type="button">Cerrar sesión</button>
+  </header>
+
+  <main class="panel">
+    <section class="hero">
+      <h1>Control de Lluvia</h1>
+      <p>Registra un evento de lluvia y compáralo con el estándar de Cali.</p>
+    </section>
+    <section class="kpis" aria-label="Resumen de la sesión">
+      <div class="kpi k1"><small>Registros</small><b id="kpi-total">0</b></div>
+      <div class="kpi k2"><small>Precipitación acumulada</small><b id="kpi-acum">0 mm</b></div>
+      <div class="kpi k3"><small>Promedio por evento</small><b id="kpi-prom">—</b></div>
+      <div class="kpi k4"><small>Sobre el estándar (14 mm)</small><b id="kpi-sobre">0</b></div>
+    </section>
+
+    <section class="tarjeta t-azul">
+      <h2><span class="ico"><svg><use href="#i-gota"/></svg></span>Registrar lluvia</h2>
+      <form id="form-registro" novalidate>
+        <label for="direccion">Dirección de la zona</label>
+        <div class="campo"><svg><use href="#i-pin"/></svg><input id="direccion" type="text" placeholder="Calle 10 con carrera 15, Cali"></div>
+        <div class="fila">
+          <div><label for="inicio">Hora de inicio</label><div class="campo"><svg><use href="#i-reloj"/></svg><input id="inicio" type="time"></div></div>
+          <div><label for="fin">Hora de fin</label><div class="campo"><svg><use href="#i-reloj"/></svg><input id="fin" type="time"></div></div>
+        </div>
+        <div class="fila">
+          <div><label for="precip">Precipitación (mm)</label><div class="campo"><svg><use href="#i-gota"/></svg><input id="precip" type="number" min="0" step="0.1" placeholder="18"></div></div>
+          <div><label for="registrador">Usuario que registra</label><input id="registrador" type="text" placeholder="Ana Pérez"></div>
+        </div>
+        <label for="foto">Foto de la zona afectada</label>
+        <label class="subir" for="foto"><svg><use href="#i-camara"/></svg><span id="texto-foto">Tomar o elegir una foto</span></label>
+        <input id="foto" type="file" accept="image/*" capture="environment" class="oculto-acc">
+        <img id="vista-foto" class="oculto" alt="Vista previa de la zona">
+        <p id="msg-registro" class="aviso error oculto" role="alert"></p>
+        <div class="botones">
+          <button type="submit" class="primario">Calcular y registrar</button>
+          <button type="button" id="btn-limpiar" class="secundario">Limpiar</button>
+        </div>
+      </form>
+    </section>
+
+    <section class="tarjeta t-verde">
+      <h2><span class="ico"><svg><use href="#i-calc"/></svg></span>Resultados del cálculo</h2>
+      <div id="reloj" class="oculto"><div class="esfera"><i></i></div><span>Calculando…</span></div>
+      <div id="resultado"><p class="vacio">Registra un evento para ver aquí la duración, la comparación con el estándar y el cálculo.</p></div>
+    </section>
+
+    <section class="tarjeta t-ambar">
+      <h2><span class="ico"><svg><use href="#i-barras"/></svg></span>Precipitación por registro</h2>
+      <canvas id="grafica" width="900" height="320" aria-label="Gráfica de barras de precipitación"></canvas>
+      <p id="acumulado" class="sub"></p>
+    </section>
+
+    <section class="tarjeta t-violeta">
+      <h2><span class="ico"><svg><use href="#i-lista"/></svg></span>Registros de lluvia</h2>
+      <div class="scroll">
+        <table>
+          <thead><tr><th>Fecha</th><th>Dirección</th><th>Inicio</th><th>Fin</th><th>Duración</th><th>mm</th><th>Comparación</th><th>Registrado por</th><th>Foto</th></tr></thead>
+          <tbody id="tabla"></tbody>
+        </table>
+      </div>
+      <p id="vacio-tabla" class="vacio">Aún no hay registros en esta sesión.</p>
+    </section>
+  </main>
+  <footer class="pie">Proyecto académico · Los datos se guardan solo en memoria durante la sesión</footer>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
